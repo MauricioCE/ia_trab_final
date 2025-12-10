@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import helper
-from dados import (
+
+from dados_q1 import (
     MAX_RODADAS,
     MAX_INTERACOES,
     MAX_INTERACOES_SEM_MELHORIA,
@@ -9,26 +9,28 @@ from dados import (
     PRECISAO_DECIMAL,
 )
 
+import helper as helper
+
 
 class HillClimbing:
     def execute(self, dados):
-        resultados = []
+        resultados = {}
 
         for id, func_obj, limites, tipo, episilon, _ in dados:
-            resultados.append(
-                self.climb(func_obj, limites, tipo, MAX_RODADAS, episilon, id)
+            resultados[id] = self.search(
+                id, func_obj, limites, tipo, MAX_RODADAS, episilon
             )
 
         return resultados
 
-    def climb(
+    def search(
         self,
+        id,
         func_obj,
         limites,
         tipo,
         rodadas,
         epsilon,
-        id,
     ):
         solucoes = []
 
@@ -68,7 +70,7 @@ class HillClimbing:
                     f_cand = func_obj(*x_cand)
 
                     helper.print_com_flush(
-                        f"HC : {id} - Rodada {rodada} - Interação {interacoes:02d} - Vizinho {vizinhos:02d}"
+                        f"HC : {id} - Rodada {rodada} - Interação {interacoes:02d} - Vizinho {vizinhos:02d} f_best: {f_best:.4f}"
                     )
 
                     vizinhos += 1
@@ -92,7 +94,9 @@ class HillClimbing:
 
         # grafico(x_coords, y_coords, f_coords, func_obj)
         print()
-        return helper.get_dados_modal(solucoes)
+        dados = helper.get_dados_modal(solucoes, tipo)
+        print(f"f_best: {dados[0]:.4f} / frequência: {dados[1]}")
+        return dados
 
 
 def grafico(x_coords, y_coords, f_coords, func_obj):

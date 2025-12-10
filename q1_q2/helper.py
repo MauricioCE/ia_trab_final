@@ -2,7 +2,7 @@ import sys
 from collections import Counter
 
 
-def get_dados_modal(resultados):
+def get_dados_modal(resultados, tipo):
     dados = Counter(resultados)
 
     if not dados:
@@ -10,7 +10,13 @@ def get_dados_modal(resultados):
 
     max_freq = max(dados.values())
     modas = [value for value, freq in dados.items() if freq == max_freq]
-    valor_modal = modas[0]
+
+    if tipo == "min":
+        valor_modal = min(modas)
+    elif tipo == "max":
+        valor_modal = max(modas)
+    else:
+        valor_modal = modas[0]
 
     return valor_modal, max_freq
 
@@ -18,7 +24,3 @@ def get_dados_modal(resultados):
 def print_com_flush(msg):
     sys.stdout.write("\r" + msg + f"{' ' * 5}")
     sys.stdout.flush()
-
-
-def print_divider():
-    print("\n--------------------------------------------------\n")
